@@ -1,0 +1,124 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:automation="clr-namespace:Avalonia.Automation;assembly=Avalonia.Controls"
+             xmlns:md="clr-namespace:LiveMarkdown.Avalonia;assembly=LiveMarkdown.Avalonia"
+             x:Class="Launcher.App.Views.ResultsView">
+    <Grid ClipToBounds="True">
+        <ListBox x:Name="ResultList"
+                 Classes="results"
+                 IsVisible="{Binding IsResultListVisible}"
+                 IsEnabled="{Binding IsResultListEnabled}"
+                 TabIndex="1"
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"
+                 automation:AutomationProperties.Name="Search results"
+                 automation:AutomationProperties.HelpText="Use Up and Down arrow keys to navigate results, Enter to open."
+                 ItemsSource="{Binding DisplayRows}"
+                 SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+                 DoubleTapped="OnResultListDoubleTapped">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Classes="rowShell"
+                            Background="{Binding $parent[ListBoxItem].Background}">
+                        <Grid>
+                            <Grid IsVisible="{Binding IsStructuredRow}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="230" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           Classes="rowProject rowLineText"
+                                           Text="{Binding ProjectIdentifier}"
+                                           Margin="0,0,8,0"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Stretch" />
+
+                                <TextBlock Grid.Column="1"
+                                           Classes="rowLineText"
+                                           Text="|"
+                                           Foreground="{DynamicResource MutedForegroundBrush}"
+                                           Margin="0,0,8,0"
+                                           VerticalAlignment="Center" />
+
+                                <TextBlock Grid.Column="2"
+                                           Classes="path rowLineText"
+                                           Text="{Binding FullPath}"
+                                           Margin="0,0,8,0"
+                                           VerticalAlignment="Center" />
+
+                                <TextBlock Grid.Column="3"
+                                           Classes="rowLineText"
+                                           Text="|"
+                                           Foreground="{DynamicResource MutedForegroundBrush}"
+                                           Margin="0,0,8,0"
+                                           VerticalAlignment="Center"
+                                           IsVisible="{Binding IsIconSeparatorVisible}" />
+
+                                <Border Grid.Column="4"
+                                        Width="20"
+                                        Height="20"
+                                        Padding="2"
+                                        CornerRadius="4"
+                                        BorderThickness="1"
+                                        BorderBrush="{DynamicResource RowIconBorderBrush}"
+                                        Background="{DynamicResource RowIconBackgroundBrush}"
+                                        VerticalAlignment="Center"
+                                        ToolTip.Tip="{Binding DefaultIdeName}"
+                                        IsVisible="{Binding IsIconVisible}">
+                                    <Image Source="{Binding DefaultIdeIcon}"
+                                           Width="14"
+                                           Height="14"
+                                           Stretch="Fill" />
+                                </Border>
+                            </Grid>
+
+                            <TextBlock Classes="terminalRowText rowLineText"
+                                       IsVisible="{Binding IsTerminalStandardRow}"
+                                       Text="{Binding ProjectIdentifier}" />
+
+                            <TextBlock Classes="terminalRowText rowLineText"
+                                       Foreground="{DynamicResource ErrorBrush}"
+                                       IsVisible="{Binding IsTerminalErrorRow}"
+                                       Text="{Binding ProjectIdentifier}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Border x:Name="AiResponsePanel"
+                IsVisible="{Binding IsAiOutputVisible}"
+                Classes="card aiResponseCard">
+            <Grid VerticalAlignment="Stretch">
+                <ScrollViewer>
+                    <md:MarkdownRenderer Classes="aiMarkdown"
+                                VerticalAlignment="Stretch"
+                                Margin="10,5"
+                                MarkdownBuilder="{Binding AiMarkdownBuilder}" />
+                </ScrollViewer >
+
+                <Border x:Name="AiResponseBlockingOverlay"
+                        IsVisible="{Binding IsAiResponseBlocked}"
+                        Background="{DynamicResource OverlayScrimBrush}"
+                        CornerRadius="8">
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="8">
+                        <ProgressBar Width="180"
+                                     IsIndeterminate="True" />
+                        <TextBlock Classes="label"
+                                   Text="AI processing..." />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

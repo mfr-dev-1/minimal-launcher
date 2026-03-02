@@ -1,0 +1,228 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:automation="clr-namespace:Avalonia.Automation;assembly=Avalonia.Controls"
+             x:Class="Launcher.App.Views.SettingsView">
+    <Border IsVisible="{Binding IsSettingsVisible}"
+            Classes="chrome"
+            Background="{DynamicResource OverlayScrimBrush}"
+            Padding="18"
+            automation:AutomationProperties.Name="Settings panel"
+            automation:AutomationProperties.HelpText="Configure runtime hotkeys, terminal, and AI chat options.">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="10" Margin="0,0,25,0">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="6">
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Text="Settings"
+                               FontSize="24"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource ForegroundBrush}" />
+                    <Button x:Name="SettingsCloseButton"
+                            Grid.RowSpan="2"
+                            Grid.Column="1"
+                            Classes="chromeAction"
+                            Width="28"
+                            Height="28"
+                            Padding="0"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            FontFamily="Segoe UI Symbol,Segoe UI"
+                            FontSize="12"
+                            FontWeight="SemiBold"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            Click="OnSettingsCloseClicked"
+                            automation:AutomationProperties.Name="Close settings panel"
+                            Content="✕" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Text="Changes apply immediately after Save."
+                               Foreground="{DynamicResource AccentMutedBrush}"
+                               FontSize="12" />
+                </Grid>
+
+                <Border Classes="card" Margin="0,8,0,0">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="General hotkeys"
+                                   Classes="sectionTitle" />
+                        <Grid ColumnDefinitions="170,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Classes="label" Text="Exit" />
+                            <TextBox x:Name="SettingsGeneralExitTextBox"
+                                     Grid.Row="0"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsGeneralExitText, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Classes="label" Text="Move Up" />
+                            <TextBox Grid.Row="1"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsGeneralMoveUpText, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Classes="label" Text="Move Down" />
+                            <TextBox Grid.Row="2"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsGeneralMoveDownText, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="3" Grid.Column="0" Classes="label" Text="Confirm" />
+                            <TextBox Grid.Row="3"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsGeneralConfirmText, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="4" Grid.Column="0" Classes="label" Text="Switch Mode" />
+                            <TextBox Grid.Row="4"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsGeneralSwitchModeText, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="5" Grid.Column="0" Classes="label" Text="Alt Modifiers" />
+                            <TextBox Grid.Row="5"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsGeneralAlternativeModifiersText, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="6" Grid.Column="0" Classes="label" Text="Alt Keys" />
+                            <TextBox Grid.Row="6"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsGeneralAlternativeKeysText, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="7" Grid.Column="0" Classes="label" Text="Theme" />
+                            <ComboBox x:Name="SettingsThemeOverrideComboBox"
+                                      Grid.Row="7"
+                                      Grid.Column="1"
+                                      Classes="field"
+                                      Height="30"
+                                      automation:AutomationProperties.Name="Theme override"
+                                      ItemsSource="{Binding SettingsThemeOverrideOptions}"
+                                      SelectedItem="{Binding SettingsThemeOverrideText, Mode=TwoWay}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Terminal"
+                                   Classes="sectionTitle" />
+                        <Grid ColumnDefinitions="170,*" RowDefinitions="Auto,Auto" RowSpacing="8">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Classes="label" Text="Shell Executable" />
+                            <TextBox Grid.Row="0"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsTerminalShellExecutableText, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Classes="label" Text="Arg Prefix" />
+                            <TextBox Grid.Row="1"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsTerminalShellArgumentsPrefixText, Mode=TwoWay}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="AI Chat"
+                                   Classes="sectionTitle" />
+                        <Grid ColumnDefinitions="170,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Classes="label" Text="CLI Executable" />
+                            <TextBox Grid.Row="0"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsAiChatCliExecutableText, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Classes="label" Text="Arg Template" />
+                            <TextBox Grid.Row="1"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsAiChatArgumentTemplateText, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Classes="label" Text="Context Folder" />
+                            <TextBox Grid.Row="2"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsAiChatContextDirectoryText, Mode=TwoWay}" />
+
+                            <TextBlock Grid.Row="3" Grid.Column="0" Classes="label" Text="Timeout Seconds" />
+                            <TextBox Grid.Row="3"
+                                     Grid.Column="1"
+                                     Classes="field"
+                                     Height="30"
+                                     Text="{Binding SettingsAiChatTimeoutSecondsText, Mode=TwoWay}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Behavior"
+                                   Classes="sectionTitle" />
+                        <CheckBox IsChecked="{Binding SettingsBehaviorPersistModeOnLaunch, Mode=TwoWay}"
+                                  automation:AutomationProperties.Name="Persist mode on launch">
+                            Persist mode on launch
+                        </CheckBox>
+                        <StackPanel Margin="22,4,0,0"
+                                    Spacing="4"
+                                    IsEnabled="{Binding SettingsBehaviorPersistModeOnLaunch}">
+                            <TextBlock Classes="label"
+                                       Text="Also restore state per mode:" />
+                            <CheckBox IsChecked="{Binding SettingsBehaviorPersistProjectSearchState, Mode=TwoWay}"
+                                      automation:AutomationProperties.Name="Persist project search state">
+                                Project Search (search text)
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding SettingsBehaviorPersistAiChatState, Mode=TwoWay}"
+                                      automation:AutomationProperties.Name="Persist AI chat state">
+                                AI Chat (output)
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding SettingsBehaviorPersistTerminalState, Mode=TwoWay}"
+                                      automation:AutomationProperties.Name="Persist terminal state">
+                                Terminal (output)
+                            </CheckBox>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border MinHeight="18">
+                    <TextBlock Foreground="{DynamicResource ErrorBrush}"
+                               FontSize="12"
+                               IsVisible="{Binding HasSettingsError}"
+                               Text="{Binding SettingsErrorText}" />
+                </Border>
+
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Spacing="8"
+                            Margin="0,6,0,0">
+                    <Button x:Name="SettingsSaveButton"
+                            Classes="primaryButton"
+                            Width="110"
+                            Height="32"
+                            Click="OnSettingsSaveClicked"
+                            automation:AutomationProperties.Name="Save settings"
+                            Content="Save" />
+                    <Button x:Name="SettingsCancelButton"
+                            Classes="secondaryButton"
+                            Width="110"
+                            Height="32"
+                            Click="OnSettingsCancelClicked"
+                            automation:AutomationProperties.Name="Cancel settings"
+                            Content="Cancel" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</UserControl>

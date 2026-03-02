@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:automation="clr-namespace:Avalonia.Automation;assembly=Avalonia.Controls"
+             x:Class="Launcher.App.Views.SearchBarView">
+    <Grid Margin="0,0,0,12" RowDefinitions="Auto,Auto" RowSpacing="6">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+            <StackPanel x:Name="CommandHintBar"
+                        Grid.Column="0"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal"
+                            IsVisible="{Binding IsTopModeNavigationVisible}">
+                    <Button x:Name="TopHintProjectsButton"
+                            Classes="searchHintButton"
+                            Click="OnTopHintProjectsClicked"
+                            TabIndex="1"
+                            automation:AutomationProperties.Name="Switch to project search mode"
+                            Content="projects" />
+                    <TextBlock Classes="searchHintSeparator"
+                               Text="|" />
+                    <Button x:Name="TopHintAiButton"
+                            Classes="searchHintButton"
+                            Click="OnTopHintAiClicked"
+                            TabIndex="2"
+                            automation:AutomationProperties.Name="Switch to AI chat mode"
+                            Content="? ai" />
+                    <TextBlock Classes="searchHintSeparator"
+                               Text="|" />
+                    <Button x:Name="TopHintTerminalButton"
+                            Classes="searchHintButton"
+                            Click="OnTopHintTerminalClicked"
+                            TabIndex="3"
+                            automation:AutomationProperties.Name="Switch to terminal command mode"
+                            Content="&gt; command" />
+                    <TextBlock Classes="searchHintSeparator"
+                               Text="|" />
+                    <Button x:Name="TopHintMetaButton"
+                            Classes="searchHintButton"
+                            Click="OnTopHintMetaClicked"
+                            TabIndex="4"
+                            automation:AutomationProperties.Name="Switch to meta command mode"
+                            Content="! meta" />
+                </StackPanel>
+                <TextBlock Classes="searchHintText"
+                           IsVisible="{Binding IsFilePickerMode}"
+                           Text="{Binding CommandHintText}" />
+            </StackPanel>
+
+            <Button x:Name="SettingsOpenButton"
+                    Grid.Column="1"
+                    Classes="chromeAction"
+                    Margin="12,0,0,0"
+                    Click="OnSettingsOpenClicked"
+                    automation:AutomationProperties.Name="Open settings panel"
+                    Content="Settings" />
+        </Grid>
+
+        <Border x:Name="SearchBarShell" Grid.Row="1" Classes="searchFrame" Height="{Binding SearchInputHostHeight}">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                <Border Grid.Column="0"
+                        Classes="searchPrefix"
+                        VerticalAlignment="Stretch">
+                    <TextBlock Classes="searchPrefixText"
+                               automation:AutomationProperties.Name="Current mode indicator"
+                               Text="{Binding ModeIndicatorIconText}">
+                    </TextBlock>
+                </Border>
+                <TextBox x:Name="SearchBox"
+                         Grid.Column="1"
+                         Classes="field searchInput"
+                         Watermark="{Binding SearchWatermarkText}"
+                         AcceptsReturn="{Binding IsAiChatMode}"
+                         TextWrapping="{Binding SearchInputTextWrapping}"
+                         MinLines="{Binding SearchInputMinLines}"
+                         MaxLines="{Binding SearchInputMaxLines}"
+                         VerticalContentAlignment="{Binding SearchInputVerticalContentAlignment}"
+                         IsEnabled="{Binding IsSearchEnabled}"
+                         TabIndex="0"
+                         automation:AutomationProperties.Name="Search input"
+                         automation:AutomationProperties.HelpText="Type project text, > command, or ! meta command."
+                         Text="{Binding SearchText, Mode=TwoWay}" />
+                <Button Grid.Column="2"
+                        Classes="searchHintButton"
+                        IsVisible="{Binding IsTerminalMode}"
+                        VerticalAlignment="Center"
+                        Click="OnClearTerminalClicked"
+                        automation:AutomationProperties.Name="Clear terminal output"
+                        Content="🗑" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

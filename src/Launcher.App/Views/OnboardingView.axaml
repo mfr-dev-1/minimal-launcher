@@ -1,0 +1,179 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:automation="clr-namespace:Avalonia.Automation;assembly=Avalonia.Controls"
+             x:Class="Launcher.App.Views.OnboardingView">
+    <Border IsVisible="{Binding IsOnboardingVisible}"
+            Classes="chrome"
+            Background="{DynamicResource OnboardingOverlayBrush}"
+            Padding="18"
+            automation:AutomationProperties.Name="Onboarding panel"
+            automation:AutomationProperties.HelpText="Configure first-run launcher settings.">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="10" Margin="0,0,25,0">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="6">
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Text="First-run onboarding"
+                               FontSize="24"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource ForegroundBrush}" />
+                    <Button x:Name="OnboardingCloseButton"
+                            Grid.RowSpan="2"
+                            Grid.Column="1"
+                            Classes="chromeAction"
+                            Width="28"
+                            Height="28"
+                            Padding="0"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            FontFamily="Segoe UI Symbol,Segoe UI"
+                            FontSize="12"
+                            FontWeight="SemiBold"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            IsVisible="{Binding !IsFirstTimeOnboarding}"
+                            Click="OnOnboardingCloseClicked"
+                            automation:AutomationProperties.Name="Close onboarding panel"
+                            Content="✕" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Text="Confirm roots, preferred tool, and hotkey. Esc safely keeps defaults."
+                               Foreground="{DynamicResource AccentMutedBrush}"
+                               FontSize="12" />
+                </Grid>
+
+                <Border Classes="card" Margin="0,8,0,0">
+                    <StackPanel Spacing="8">
+                        <!-- Header row -->
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Grid.Column="0" Text="Project roots" Classes="sectionTitle" />
+                            <Button Grid.Column="1" Classes="secondaryButton" Height="24" Padding="8,0"
+                                    Content="Clear all" Click="OnOnboardingClearAllRootsClicked" />
+                        </Grid>
+
+                        <!-- Roots list -->
+                        <Border BorderBrush="{DynamicResource ChromeBorderBrush}" BorderThickness="1"
+                                CornerRadius="6" MaxHeight="160">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding OnboardingRoots}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="Auto,*,Auto" Margin="6,4">
+                                                <CheckBox Grid.Column="0" IsChecked="{Binding Enabled, Mode=TwoWay}"
+                                                          VerticalAlignment="Center" Margin="0,0,6,0" />
+                                                <TextBlock Grid.Column="1" Classes="path" Text="{Binding Path}"
+                                                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                <Button Grid.Column="2" Classes="ghostButton" Width="28" Height="28"
+                                                        Content="🗑" FontSize="13"
+                                                        Click="OnOnboardingDeleteRootClicked"
+                                                        Tag="{Binding}"
+                                                        automation:AutomationProperties.Name="Delete root" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+
+                        <!-- Add row -->
+                        <Grid ColumnDefinitions="*,Auto" Height="32">
+                            <TextBox x:Name="OnboardingAddRootInput"
+                                     Grid.Column="0" Classes="field"
+                                     FontFamily="Cascadia Mono,Consolas"
+                                     Margin="0,0,6,0"
+                                     automation:AutomationProperties.Name="Add root path"
+                                     KeyDown="OnOnboardingAddRootInputKeyDown"
+                                     Text="{Binding OnboardingAddRootText, Mode=TwoWay}" />
+                            <Button Grid.Column="1" Classes="secondaryButton" Width="60" Height="32"
+                                    Content="Add" Click="OnOnboardingAddRootClicked" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Tool check"
+                                   Classes="sectionTitle" />
+                        <TextBlock Foreground="{DynamicResource AccentMutedBrush}"
+                                   FontSize="12"
+                                   TextWrapping="NoWrap"
+                                   TextTrimming="CharacterEllipsis"
+                                   Text="{Binding OnboardingToolCheckStatusText}" />
+                        <ScrollViewer>
+                            <ListBox x:Name="OnboardingToolRowsList"
+                                    ScrollViewer.IsScrollChainingEnabled="False"
+                                    Margin="0,2,0,0"
+                                    Height="120"
+                                    Background="{DynamicResource SurfaceBackgroundBrush}"
+                                    Foreground="{DynamicResource ForegroundBrush}"
+                                    BorderBrush="{DynamicResource ChromeBorderBrush}"
+                                    BorderThickness="1"
+                                    automation:AutomationProperties.Name="Detected tools list"
+                                    ItemsSource="{Binding OnboardingToolRows}" />
+                        </ScrollViewer>
+                        <TextBlock Margin="0,2,0,0"
+                                   Foreground="{DynamicResource ForegroundBrush}"
+                                   FontSize="12"
+                                   Text="Preferred default tool:" />
+                        <ComboBox x:Name="OnboardingPreferredToolComboBox"
+                                  Classes="field"
+                                  Margin="0,2,0,0"
+                                  Height="32"
+                                  automation:AutomationProperties.Name="Preferred default tool"
+                                  ItemsSource="{Binding OnboardingDetectedTools}"
+                                  SelectedItem="{Binding SelectedPreferredTool, Mode=TwoWay}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DisplayName}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Global hotkey"
+                                   Classes="sectionTitle" />
+                        <TextBox x:Name="OnboardingHotkeyTextBox"
+                                 Classes="field"
+                                 Height="32"
+                                 FontFamily="Cascadia Mono,Consolas"
+                                 automation:AutomationProperties.Name="Global hotkey"
+                                 automation:AutomationProperties.HelpText="Example: Alt+Shift+Space"
+                                 Text="{Binding OnboardingHotkeyText, Mode=TwoWay}" />
+                    </StackPanel>
+                </Border>
+
+                <Border x:Name="OnboardingErrorSlot"
+                        Margin="0,2,0,0"
+                        MinHeight="18">
+                    <TextBlock Foreground="{DynamicResource ErrorBrush}"
+                               FontSize="12"
+                               IsVisible="{Binding HasOnboardingError}"
+                               Text="{Binding OnboardingErrorText}" />
+                </Border>
+
+                <StackPanel x:Name="OnboardingActionBar"
+                            Classes="onboardingActions"
+                            Margin="0,6,0,0">
+                    <Button x:Name="OnboardingFinishButton"
+                            Classes="primaryButton"
+                            Width="110"
+                            Height="32"
+                            Click="OnOnboardingFinishClicked"
+                            IsEnabled="{Binding OnboardingFinishEnabled}"
+                            automation:AutomationProperties.Name="Finish onboarding"
+                            Content="Finish" />
+                    <Button x:Name="OnboardingSkipButton"
+                            Classes="secondaryButton"
+                            Width="110"
+                            Height="32"
+                            Click="OnOnboardingSkipClicked"
+                            automation:AutomationProperties.Name="Skip onboarding"
+                            Content="Skip" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</UserControl>

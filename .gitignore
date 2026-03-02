@@ -1,0 +1,37 @@
+# Build outputs
+bin/
+obj/
+artifacts/
+.tmpbuild
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+project.assets.json
+project.lock.json
+
+# Test artifacts
+TestResults/
+*.trx
+*.coverage
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Logs & temp
+*.log
+*.tmp
+
+# AI
+.claude
